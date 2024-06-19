@@ -1,11 +1,12 @@
 import { build as tsupBuild, Options } from "tsup";
 import { readPackage } from "read-pkg";
 import { keys, uniq, replace, trim, toString } from "lodash-es";
-import { writeFileSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { cwd } from "node:process";
 import hostedGitInfo from "hosted-git-info";
 import { execSync } from "node:child_process";
+import { rimrafSync } from "rimraf";
 
 const output = {
   dir: ".",
@@ -15,6 +16,8 @@ const output = {
 };
 
 export const main = async (curWorkDir = cwd()) => {
+  const dist = join(curWorkDir, "dist");
+  if (existsSync(dist)) rimrafSync(dist);
   // generate mjs and cjs file for project
   const pkg = await readPackage({ cwd: curWorkDir });
   const tinyTsPkgBundler = (pkg.tinyTsPkgBundler || {}) as Options & {
@@ -75,7 +78,7 @@ export const main = async (curWorkDir = cwd()) => {
       join(output.dir, "./index.d.ts"),
     ]),
     scripts: {
-      prepublishOnly: "../node_modules/.bin/tiny-ts-package-bundler",
+      prepublishOnly: "tiny-ts-package-bundler",
       ...pkg.scripts,
     },
     readme: undefined,
