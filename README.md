@@ -1,6 +1,6 @@
 # tinyTS-package-bundler
 
-Tinny tool kit to build your typescript project
+Tiny tool kit to build your typescript project
 
 ## Installation
 
