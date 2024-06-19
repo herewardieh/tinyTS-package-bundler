@@ -1,6 +1,6 @@
 {
   "name": "tiny-ts-package-bundler",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "tiny typescript package bundler including generating global typescript declaration file, converting typescript to javascript, creating package.json file for npm package release",
   "main": "./dist/index.cjs",
   "bin": {
@@ -26,8 +26,11 @@
   "license": "MIT",
   "dependencies": {
     "@jest/globals": "^29.7.0",
+    "@swc/core": "^1.6.1",
+    "@types/hosted-git-info": "^3.0.5",
     "@types/lodash-es": "^4.17.12",
-    "esbuild": "^0.21.5",
+    "@types/node": "^20.14.5",
+    "hosted-git-info": "^7.0.2",
     "jest": "^29.7.0",
     "lodash-es": "^4.17.21",
     "read-pkg": "^9.0.1",
@@ -37,7 +40,7 @@
     "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
-  "_id": "tiny-ts-package-bundler@1.0.0",
+  "_id": "tiny-ts-package-bundler@1.1.0",
   "module": "./dist/index.mjs",
   "exports": {
     ".": {
@@ -55,5 +58,10 @@
     "patchedDependencies": {
       "@cspotcode/source-map-support@0.8.1": "patches/@cspotcode__source-map-support@0.8.1.patch"
     }
-  }
+  },
+  "repository": "https://github.com/herewardieh/tinyTS-package-bundler.git",
+  "bugs": {
+    "url": "https://github.com/herewardieh/tinyTS-package-bundler/issues"
+  },
+  "homepage": "https://github.com/herewardieh/tinyTS-package-bundler#readme"
 }

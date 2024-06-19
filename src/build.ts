@@ -1,10 +1,11 @@
-import { BuildOptions, build } from "esbuild";
-import { build as tsupBuild } from "tsup";
+import { build as tsupBuild, Options } from "tsup";
 import { readPackage } from "read-pkg";
-import { keys, uniq } from "lodash-es";
+import { keys, uniq, replace, trim, toString } from "lodash-es";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { cwd } from "node:process";
+import hostedGitInfo from "hosted-git-info";
+import { execSync } from "node:child_process";
 
 const output = {
   dir: ".",
@@ -13,49 +14,48 @@ const output = {
   module: "./dist/index.mjs",
 };
 
-const JS_OUTPUT_OPTIONS: BuildOptions[] = [
-  {
-    format: "esm",
-    outfile: output.module,
-  },
-  {
-    format: "cjs",
-    outfile: output.main,
-  },
-];
-
 export const main = async (curWorkDir = cwd()) => {
   // generate mjs and cjs file for project
   const pkg = await readPackage({ cwd: curWorkDir });
-  const tinyTsPkgBundler = (pkg.tinyTsPkgBundler || {}) as {
-    define: Record<string, string>;
+  const tinyTsPkgBundler = (pkg.tinyTsPkgBundler || {}) as Options & {
+    dtsEntry: string[];
   };
-  const baseConfig: Partial<BuildOptions> = {
-    define: tinyTsPkgBundler?.define,
+  tsupBuild({
+    clean: false,
     sourcemap: false,
-    minify: true,
-    logLevel: "warning",
     bundle: true,
     external: uniq([
       ...keys(pkg.dependencies as Record<string, string>),
       ...keys(pkg.devDependencies as Record<string, string>),
     ]),
-    platform: "node",
+    outExtension({ format }) {
+      if (format === "cjs")
+        return {
+          js: `.cjs`,
+        };
+      return {
+        js: `.mjs`,
+      };
+    },
     entryPoints: ["src/index.ts"],
-  };
-  for (const jsOutput of JS_OUTPUT_OPTIONS) {
-    await build({ ...baseConfig, ...jsOutput });
-  }
+    platform: tinyTsPkgBundler?.platform || "node",
+    target: "es5",
+    format: ["esm", "cjs"],
+    ...tinyTsPkgBundler,
+  });
   // generate typescript global declaration
   await tsupBuild({
-    entry: [join(curWorkDir, "src", "index.ts")],
+    clean: false,
+    entry: tinyTsPkgBundler.dtsEntry || [join(curWorkDir, "src", "index.ts")],
     dts: {
       resolve: true,
       only: true,
     },
     format: "esm",
   });
+  const remoteUrl = trim(toString(execSync("git remote get-url origin")));
   //generate package.json for npm release
+  const hosted = hostedGitInfo.fromUrl(remoteUrl);
   const template = {
     ...pkg,
     type: "module",
@@ -79,6 +79,7 @@ export const main = async (curWorkDir = cwd()) => {
       ...pkg.scripts,
     },
     readme: undefined,
+    repository: `${replace(remoteUrl, `${hosted.auth}@`, "")}`,
   };
   writeFileSync(
     join(curWorkDir, "package.json"),
