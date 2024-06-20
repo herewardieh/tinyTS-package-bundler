@@ -2,11 +2,11 @@
 
 Tiny tool kit to build your typescript project, powered by [tsup](https://github.com/egoist/tsup).
 
-## Advantage of tiny-ts-package-bundler?
+### Advantage of tiny-ts-package-bundler?
 
-its support for generating js in commonjs and es module, global declaration files, and a package.json file that contains most of the information for repositories.
+it allows generating JavaScript files in ES Module (ESM) and CommonJS (CJS) formats, global declaration files, and a package.json file that contains most of the information for repositories.
 
-## Installation
+### Installation
 
 ```sh
 npm i tiny-ts-package-bundler --save
@@ -18,10 +18,9 @@ Recommend you use `pnpm`:
 pnpm add tiny-ts-package-bundler
 ```
 
-## Usage
+### Usage
 
 powered by tsup so default target is node16 if you want to change build target please configure in package.json file as below:
-For more configuration options, please see [the API docs](https://paka.dev/npm/tsup#module-index-export-Options).
 
 ```js
 {
@@ -37,3 +36,5 @@ For more configuration options, please see [the API docs](https://paka.dev/npm/t
     ...
 }
 ```
+
+For more configuration options, please see [API](https://tsup.egoist.dev/).
