@@ -10,7 +10,7 @@ import { rimrafSync } from "rimraf";
 
 const output = {
   dir: ".",
-  types: "./index.d.ts",
+  types: "./dist/index.d.ts",
   main: "./dist/index.cjs",
   module: "./dist/index.mjs",
 };
@@ -29,7 +29,7 @@ export const main = async (curWorkDir = cwd()) => {
     bundle: true,
     external: uniq([
       ...keys(pkg.dependencies as Record<string, string>),
-      ...keys(pkg.devDependencies as Record<string, string>),
+      ...keys(pkg.peerDependencies as Record<string, string>),
     ]),
     outExtension({ format }) {
       if (format === "cjs")
@@ -42,7 +42,6 @@ export const main = async (curWorkDir = cwd()) => {
     },
     entryPoints: ["src/index.ts"],
     platform: tinyTsPkgBundler?.platform || "node",
-    target: "es5",
     format: ["esm", "cjs"],
     ...tinyTsPkgBundler,
   });
@@ -54,7 +53,7 @@ export const main = async (curWorkDir = cwd()) => {
       resolve: true,
       only: true,
     },
-    outDir: curWorkDir,
+    outDir: "dist",
     format: "esm",
   });
   const remoteUrl = trim(toString(execSync("git remote get-url origin")));
@@ -65,6 +64,7 @@ export const main = async (curWorkDir = cwd()) => {
     type: "module",
     main: output.main,
     module: output.module,
+    types: output.types,
     exports: {
       [output.dir]: {
         require: output.main,
