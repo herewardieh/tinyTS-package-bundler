@@ -10,7 +10,7 @@ import { rimrafSync } from "rimraf";
 
 const output = {
   dir: ".",
-  types: "./dist/type.d.ts",
+  types: "./dist/index.d.ts",
   main: "./dist/index.cjs",
   module: "./dist/index.mjs",
 };
