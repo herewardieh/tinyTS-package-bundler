@@ -1,6 +1,6 @@
 {
   "name": "tiny-ts-package-bundler",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "tiny typescript package bundler including generating global typescript declaration file, converting typescript to javascript, creating package.json file for npm package release",
   "main": "./dist/index.cjs",
   "bin": {
@@ -40,13 +40,13 @@
     "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
-  "_id": "tiny-ts-package-bundler@1.1.2",
+  "_id": "tiny-ts-package-bundler@1.1.3",
   "module": "./dist/index.mjs",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
-      "types": "./dist/type.d.ts"
+      "types": "./index.d.ts"
     },
     "./index.ts": "./index.ts"
   },

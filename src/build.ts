@@ -10,7 +10,7 @@ import { rimrafSync } from "rimraf";
 
 const output = {
   dir: ".",
-  types: "./dist/index.d.ts",
+  types: "./index.d.ts",
   main: "./dist/index.cjs",
   module: "./dist/index.mjs",
 };
@@ -54,6 +54,7 @@ export const main = async (curWorkDir = cwd()) => {
       resolve: true,
       only: true,
     },
+    outDir: curWorkDir,
     format: "esm",
   });
   const remoteUrl = trim(toString(execSync("git remote get-url origin")));
