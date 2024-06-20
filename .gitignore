@@ -2,3 +2,4 @@
 /dist
 *lock.*
 /coverage
+index.d.ts
